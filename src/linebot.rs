@@ -10,6 +10,7 @@ use line_bot_sdk_rust::support::actix::Signature;
 
 mod get_class_id_to_class_name;
 mod get_events;
+mod create_text;
 mod request_handler;
 
 #[derive(Clone)]
