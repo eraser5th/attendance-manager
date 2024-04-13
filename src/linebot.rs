@@ -8,9 +8,9 @@ use line_bot_sdk_rust::line_webhook::models::CallbackRequest;
 use line_bot_sdk_rust::parser::signature::validate_signature;
 use line_bot_sdk_rust::support::actix::Signature;
 
+mod create_text;
 mod get_class_id_to_class_name;
 mod get_events;
-mod create_text;
 mod request_handler;
 
 #[derive(Clone)]
