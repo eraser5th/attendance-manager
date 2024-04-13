@@ -1,5 +1,8 @@
+use actix_web::{get, web::ServiceConfig};
+use shuttle_actix_web::ShuttleActixWeb;
+
 use actix_web::{
-    error::ErrorBadRequest, middleware, post, web, App, Error, HttpResponse, HttpServer,
+    error::ErrorBadRequest, post, web, Error, HttpResponse,
 };
 use dotenv::dotenv;
 use line_bot_sdk_rust::{
@@ -61,16 +64,19 @@ async fn callback(signature: Signature, bytes: web::Bytes) -> Result<HttpRespons
     Ok(HttpResponse::Ok().body("ok"))
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    dotenv().ok();
-    println!("HI");
-    HttpServer::new(|| {
-        App::new()
-            .wrap(middleware::Logger::default())
-            .service(callback)
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+
+#[get("/")]
+async fn hello_world() -> &'static str {
+    "Hello World!"
 }
+
+#[shuttle_runtime::main]
+async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
+    dotenv().ok();
+    let config = move |cfg: &mut ServiceConfig| {
+        cfg.service(callback);
+    };
+
+    Ok(config.into())
+}
+
