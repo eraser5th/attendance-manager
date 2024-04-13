@@ -10,6 +10,7 @@ use line_bot_sdk_rust::support::actix::Signature;
 
 mod request_handler;
 mod get_class_id_to_class_name;
+mod get_events;
 
 #[derive(Clone)]
 pub struct LineBotEnv {
