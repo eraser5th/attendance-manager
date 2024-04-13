@@ -3,9 +3,9 @@ use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::SecretStore;
 use std::sync::Arc;
 
-use line_bot_sdk_rust::support::actix::Signature;
 use actix_web::{post, web, Error, HttpResponse};
 use dotenv::dotenv;
+use line_bot_sdk_rust::support::actix::Signature;
 pub mod linebot;
 
 use linebot::LineBotEnv;
@@ -17,7 +17,11 @@ struct AppState {
 }
 
 #[post("/callback")]
-async fn callback(data: web::Data<AppState>, signature: Signature, bytes: web::Bytes) -> Result<HttpResponse, Error> {
+async fn callback(
+    data: web::Data<AppState>,
+    signature: Signature,
+    bytes: web::Bytes,
+) -> Result<HttpResponse, Error> {
     let access_token = data.line_channel_access_token.get(0..).unwrap();
     let channel_secret = data.line_channel_secret.get(0..).unwrap();
 
@@ -33,8 +37,12 @@ async fn callback(data: web::Data<AppState>, signature: Signature, bytes: web::B
 async fn main(
     #[shuttle_runtime::Secrets] secrets: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    let channel_secret = secrets.get("LINE_CHANNEL_SECRET").expect("Failed to get LINE_CHANNEL_SECRET");
-    let access_token = secrets.get("LINE_CHANNEL_ACCESS_TOKEN").expect("Failed to get LINE_CHANNEL_ACCESS_TOKEN");
+    let channel_secret = secrets
+        .get("LINE_CHANNEL_SECRET")
+        .expect("Failed to get LINE_CHANNEL_SECRET");
+    let access_token = secrets
+        .get("LINE_CHANNEL_ACCESS_TOKEN")
+        .expect("Failed to get LINE_CHANNEL_ACCESS_TOKEN");
     let app_state = AppState {
         line_channel_secret: Arc::new(channel_secret),
         line_channel_access_token: Arc::new(access_token),
@@ -42,8 +50,7 @@ async fn main(
 
     dotenv().ok();
     let config = move |cfg: &mut ServiceConfig| {
-        cfg
-            .app_data(web::Data::new(app_state.clone()))
+        cfg.app_data(web::Data::new(app_state.clone()))
             .service(callback);
     };
 

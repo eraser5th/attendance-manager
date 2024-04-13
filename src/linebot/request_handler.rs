@@ -1,4 +1,3 @@
-
 use line_bot_sdk_rust::client::LINE;
 use line_bot_sdk_rust::line_messaging_api::apis::MessagingApiApi;
 use line_bot_sdk_rust::line_messaging_api::models::Message;
@@ -12,8 +11,7 @@ pub async fn request_handler(reqest: CallbackRequest, line: LINE) {
     println!("req: {reqest:#?}");
     for e in reqest.events {
         if let Event::MessageEvent(message_event) = e {
-            if let MessageContent::TextMessageContent(text_message) = *message_event.message
-            {
+            if let MessageContent::TextMessageContent(text_message) = *message_event.message {
                 let reply_message_request = ReplyMessageRequest {
                     reply_token: message_event.reply_token.unwrap(),
                     messages: vec![Message::Text(TextMessage::new(text_message.text))],
@@ -29,5 +27,5 @@ pub async fn request_handler(reqest: CallbackRequest, line: LINE) {
                 }
             };
         };
-    };
+    }
 }
