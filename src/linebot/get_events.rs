@@ -1,14 +1,14 @@
-use std::io::BufReader;
+use crate::linebot::get_class_id_to_class_name::get_class_id_to_class_name;
 use ical;
 use reqwest::{Client, Error};
-use crate::linebot::get_class_id_to_class_name::get_class_id_to_class_name;
+use std::io::BufReader;
 
 #[derive(Debug)]
 pub struct Event {
     pub summary: Option<String>,
     pub description: Option<String>,
     pub deadline: Option<String>,
-    pub category: Option<String>
+    pub category: Option<String>,
 }
 
 pub async fn get_events(url: String) -> Result<Vec<Event>, Error> {
@@ -21,14 +21,20 @@ pub async fn get_events(url: String) -> Result<Vec<Event>, Error> {
     let ical_calendar = ical::IcalParser::new(buf).next().unwrap().ok().unwrap();
     let ical_events = ical_calendar.events;
 
-    let events: Vec<_> = ical_events.iter().map(|e| {
-        Event {
+    let events: Vec<_> = ical_events
+        .iter()
+        .map(|e| Event {
             summary: e.properties[1].value.clone(),
             description: e.properties[2].value.clone(),
             deadline: e.properties[7].value.clone(),
-            category: search_class_name(e.properties[8].value.clone().unwrap_or_else(|| "".to_string())),
-        }
-    }).collect();
+            category: search_class_name(
+                e.properties[8]
+                    .value
+                    .clone()
+                    .unwrap_or_else(|| "".to_string()),
+            ),
+        })
+        .collect();
 
     Ok(events)
 }
