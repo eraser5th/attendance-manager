@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
-fn get_class_name() -> io::Result<()> {
-    let file = File::open("/Users/hamada/workspace/ical-test/src/syllabus.txt")?;
+pub fn get_class_id_to_class_name() -> io::Result<HashMap<String, String>> {
+    let file = File::open("./src/syllabus.txt")?;
     let reader = BufReader::new(file);
 
-    let mut map = HashMap::new();
+    let mut hash_map = HashMap::new();
 
     for line in reader.lines() {
         let line = line?; 
@@ -15,13 +15,9 @@ fn get_class_name() -> io::Result<()> {
         if parts.len() >= 2 {
             let key = parts[0].to_string(); 
             let value = parts[1..].join(" ");  
-            map.insert(key, value);
+            hash_map.insert(key, value);
         }
     }
 
-    for (key, value) in &map {
-        println!("{} {}", key, value);
-    }
-
-    Ok(())
+    Ok(hash_map)
 }
