@@ -1,0 +1,15 @@
+[package]
+name = "rust-linebot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.5.1"
+dotenv = "0.15.0"
+serde_json = "1.0.115"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.line-bot-sdk-rust]
+line-bot-sdk-rust = "1.0.1"
+features = ["actix_support"]
