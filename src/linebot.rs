@@ -5,14 +5,10 @@ use actix_web::HttpResponse;
 
 use line_bot_sdk_rust::support::actix::Signature;
 use line_bot_sdk_rust::client::LINE;
-use line_bot_sdk_rust::line_messaging_api::apis::MessagingApiApi;
-use line_bot_sdk_rust::line_messaging_api::models::Message;
-use line_bot_sdk_rust::line_messaging_api::models::ReplyMessageRequest;
-use line_bot_sdk_rust::line_messaging_api::models::TextMessage;
 use line_bot_sdk_rust::line_webhook::models::CallbackRequest;
-use line_bot_sdk_rust::line_webhook::models::Event;
-use line_bot_sdk_rust::line_webhook::models::MessageContent;
 use line_bot_sdk_rust::parser::signature::validate_signature;
+
+mod request_handler;
 
 #[derive(Clone)]
 pub struct LineBotEnv {
@@ -33,27 +29,7 @@ pub async fn linebot(linebot_env: LineBotEnv, signature: Signature, bytes: web::
     match request {
         Err(err) => return Err(ErrorBadRequest(err.to_string())),
         Ok(req) => {
-            println!("req: {req:#?}");
-            for e in req.events {
-                if let Event::MessageEvent(message_event) = e {
-                    if let MessageContent::TextMessageContent(text_message) = *message_event.message
-                    {
-                        let reply_message_request = ReplyMessageRequest {
-                            reply_token: message_event.reply_token.unwrap(),
-                            messages: vec![Message::Text(TextMessage::new(text_message.text))],
-                            notification_disabled: Some(false),
-                        };
-                        let result = line
-                            .messaging_api_client
-                            .reply_message(reply_message_request)
-                            .await;
-                        match result {
-                            Ok(r) => println!("{:#?}", r),
-                            Err(e) => println!("{:#?}", e),
-                        }
-                    };
-                };
-            };
+            request_handler::request_handler(req, line).await;
             Ok(HttpResponse::Ok().body("ok"))
         }
     }
