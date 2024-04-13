@@ -14,10 +14,10 @@ jobs:
         with:
           deploy-key: ${{ secrets.SHUTTLE_API_KEY }}
           working-directory: "./"
-          name: "my-project"
+          name: "attendance-manager"
           allow-dirty: "true"
           no-test: "true"
-          cargo-shuttle-version: "0.28.1"
+          cargo-shuttle-version: "0.43.0"
           secrets: |
             LINE_CHANNEL_SECRET = '${{ secrets.LINE_CHANNEL_SECRET }}'
             LINE_CHANNEL_ACCESS_TOKEN = '${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}'
