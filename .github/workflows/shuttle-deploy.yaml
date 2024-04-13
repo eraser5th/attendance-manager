@@ -13,7 +13,7 @@ jobs:
       - uses: shuttle-hq/deploy-action@main
         with:
           deploy-key: ${{ secrets.SHUTTLE_API_KEY }}
-          working-directory: "backend"
+          working-directory: "./"
           name: "my-project"
           allow-dirty: "true"
           no-test: "true"
