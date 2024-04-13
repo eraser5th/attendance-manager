@@ -2,7 +2,7 @@ use actix_web::{get, web::ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
 
 use actix_web::{
-    error::ErrorBadRequest, post, web, Error, HttpResponse
+    error::ErrorBadRequest, post, web, Error, HttpResponse,
 };
 use dotenv::dotenv;
 use line_bot_sdk_rust::{
