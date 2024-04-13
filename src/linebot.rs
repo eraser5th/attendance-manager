@@ -9,6 +9,7 @@ use line_bot_sdk_rust::parser::signature::validate_signature;
 use line_bot_sdk_rust::support::actix::Signature;
 
 mod request_handler;
+mod get_class_id_to_class_name;
 
 #[derive(Clone)]
 pub struct LineBotEnv {
