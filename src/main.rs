@@ -1,9 +1,7 @@
 use actix_web::{get, web::ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
 
-use actix_web::{
-    error::ErrorBadRequest, post, web, Error, HttpResponse,
-};
+use actix_web::{error::ErrorBadRequest, post, web, Error, HttpResponse};
 use dotenv::dotenv;
 use line_bot_sdk_rust::{
     client::LINE,
@@ -11,9 +9,9 @@ use line_bot_sdk_rust::{
         apis::MessagingApiApi,
         models::{Message, ReplyMessageRequest, TextMessage},
     },
+    line_webhook::models::{CallbackRequest, Event, MessageContent},
     parser::signature::validate_signature,
     support::actix::Signature,
-    line_webhook::models::{CallbackRequest, Event, MessageContent},
 };
 use std::env;
 
@@ -64,7 +62,6 @@ async fn callback(signature: Signature, bytes: web::Bytes) -> Result<HttpRespons
     Ok(HttpResponse::Ok().body("ok"))
 }
 
-
 #[get("/")]
 async fn hello_world() -> &'static str {
     "Hello World!"
@@ -79,4 +76,3 @@ async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clon
 
     Ok(config.into())
 }
-
