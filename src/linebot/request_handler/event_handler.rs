@@ -8,6 +8,7 @@ use line_bot_sdk_rust::line_messaging_api::models::ReplyMessageRequest;
 use line_bot_sdk_rust::line_messaging_api::models::TextMessage;
 use line_bot_sdk_rust::line_webhook::models::message_event::MessageEvent;
 use line_bot_sdk_rust::line_webhook::models::MessageContent;
+use line_bot_sdk_rust::line_webhook::models::source::Source;
 
 use crate::infra::DB;
 use crate::linebot::ChatContext;
@@ -22,8 +23,18 @@ pub async fn message_event_handler(
     if let MessageContent::TextMessageContent(text_message) = *message_event.message {
         let reply_message_request = match text_message.text.as_str() {
             "ical" => {
-                let source = message_event.source.unwrap();
-                chat_context.change_context(user_id.to_string(), ContextMode::IcalRegist);
+                let user_id = {
+                    let s = message_event.source.unwrap();
+                    let s = *s;
+                    if let Source::UserSource(s) = s {
+                        Ok(s.user_id)
+                    } else {
+                        Err(())
+                    }
+                };
+                Arc::make_mut(chat_context).change_context(user_id.ok().unwrap().unwrap(), ContextMode::IcalRegist);
+                
+
                 ReplyMessageRequest {
                     reply_token: message_event.reply_token.unwrap(),
                     messages: vec![Message::Text(TextMessage::new("URLおしえてちょ".to_string()))],
