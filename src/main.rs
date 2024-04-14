@@ -6,6 +6,8 @@ use std::sync::Arc;
 use actix_web::{post, web, Error, HttpResponse};
 use dotenv::dotenv;
 use line_bot_sdk_rust::support::actix::Signature;
+
+pub mod infra;
 pub mod linebot;
 
 use linebot::LineBotEnv;
