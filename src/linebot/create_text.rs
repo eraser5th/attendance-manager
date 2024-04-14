@@ -29,14 +29,14 @@ pub fn create_text(event: Event) -> String {
     for i in 13..15 {
         seconds.push(time[i])
     }
-    let t = format!("{}-{}-{}T{}-{}-{} {}", year, month, day, hour, minutes, seconds, time[15]);
+    let t = format!("{}-{}-{}T{}:{}:{}-09:00", year, month, day, hour, minutes, seconds);
     let time = DateTime::parse_from_rfc3339(&t)
+        .ok()
         .unwrap()
         .with_timezone(&Local);
     let duration: Duration = time - now;
     format!(
-        "
-{}
+        "{}
 {}
 {}
 締切日: {} あと{}日",

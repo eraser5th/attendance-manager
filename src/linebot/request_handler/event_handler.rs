@@ -37,10 +37,15 @@ pub async fn message_event_handler(message_event: MessageEvent, line: &LINE) {
         },
         url => {
             let events = get_events(url.to_string()).await.ok().unwrap();
-            let text = create_text(events[0].clone());
+            let message: String = events
+                .iter()
+                .take(10)
+                .map(|e| create_text(e.clone()))
+                .reduce(|x, y| format!("{x}\n----------------------------------\n{y}"))
+                .unwrap();
             ReplyMessageRequest {
                 reply_token: reply_token.clone(),
-                messages: vec![Message::Text(TextMessage::new(text))],
+                messages: vec![Message::Text(TextMessage::new(message))],
                 notification_disabled: Some(false),
             }
         },
