@@ -3,7 +3,7 @@ use ical;
 use reqwest::{Client, Error};
 use std::io::BufReader;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Event {
     pub summary: Option<String>,
     pub description: Option<String>,
